@@ -1,0 +1,41 @@
+@page "/category/{CategoryName}"
+@using NewsApp.Models
+@inject NewsService NewsService
+
+<h1>@CategoryName News</h1>
+
+@if (Articles == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var article in Articles)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="@article.UrlToImage" class="card-img-top" alt="@article.Title">
+                    <div class="card-body">
+                        <h5 class="card-title">@article.Title</h5>
+                        <p class="card-text">@article.Description</p>
+                        <a href="@article.Url" class="btn btn-primary" target="_blank">Read More</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string? CategoryName { get; set; }
+
+    private List<Article>? Articles { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var allArticles = await NewsService.GetNewsArticlesAsync();
+        Articles = allArticles.Where(a => a.Source?.Name == CategoryName).ToList();
+    }
+}

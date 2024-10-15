@@ -1,0 +1,49 @@
+@page "/"
+@using NewsApp.Models
+@inject NewsService NewsService
+
+<h1>Latest News</h1>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+else if (articles == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var article in articles)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="@article.UrlToImage" class="card-img-top" alt="@article.Title">
+                    <div class="card-body">
+                        <h5 class="card-title">@article.Title</h5>
+                        <p class="card-text">@article.Description</p>
+                        <a href="@article.Url" class="btn btn-primary" target="_blank">Read More</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<Article>? articles;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            articles = await NewsService.GetNewsArticlesAsync();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error loading articles: {ex.Message}";
+        }
+    }
+}

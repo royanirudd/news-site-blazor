@@ -1,0 +1,52 @@
+@page "/categories"
+@using NewsApp.Models
+@inject NewsService NewsService
+
+<h1>News Categories</h1>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+else if (articles == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var category in GetUniqueCategories())
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@category</h5>
+                        <a href="/category/@category" class="btn btn-primary">View Articles</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<Article>? articles;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            articles = await NewsService.GetNewsArticlesAsync();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error loading articles: {ex.Message}";
+        }
+    }
+
+    private IEnumerable<string> GetUniqueCategories()
+    {
+        return articles?.Select(a => a.Source?.Name ?? "Uncategorized").Distinct() ?? Enumerable.Empty<string>();
+    }
+}

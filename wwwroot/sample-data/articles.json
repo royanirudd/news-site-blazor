@@ -1,0 +1,16 @@
+[
+  {
+    "title": "New AI breakthrough",
+    "description": "Researchers announce a major advancement in artificial intelligence.",
+    "url": "https://example.com/ai-news",
+    "urlToImage": "https://example.com/ai-image.jpg",
+    "category": "Technology"
+  },
+  {
+    "title": "World Cup Final Results",
+    "description": "Exciting conclusion to the World Cup tournament.",
+    "url": "https://example.com/sports-news",
+    "urlToImage": "https://example.com/sports-image.jpg",
+    "category": "Sports"
+  },
+]
